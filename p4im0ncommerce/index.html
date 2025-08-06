@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P4IM0Ncommerce</title>
+    <!-- Enlazamos el CSS externo -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- ========================= NAVBAR ========================= -->
+    <nav class="navbar">
+        <div class="logo">P4IM0Ncommerce</div>
+        <input type="text" class="search-bar" placeholder="Buscar productos...">
+        <div class="nav-links">
+            <a href="#">Categorías</a>
+            <a href="#">Ofertas</a>
+            <button id="darkModeToggle">Modo oscuro</button>
+        </div>
+    </nav>
+
+    <!-- ========== INSTRUCCIONES DEL LABORATORIO EN DESPLEGABLE ========== -->
+    <section class="lab-info">
+        <details>
+            <summary><strong>Laboratorio de Entrenamiento: XSS Almacenado en Contexto HTML sin Codificación</strong></summary>
+            <div class="lab-content">
+                <p><strong>Descripción de la Vulnerabilidad:</strong> Este laboratorio contiene una vulnerabilidad de Cross-Site Scripting (XSS) Almacenado en la funcionalidad de comentarios de los productos. La entrada del usuario no se sanea ni se codifica antes de ser almacenada y renderizada.</p>
+
+                <p><strong>Objetivo del Laboratorio:</strong> Enviar un comentario que ejecute <code>alert()</code> cuando otro usuario visualice la publicación del producto.</p>
+
+                <p><strong>Vector de Explotación:</strong></p>
+                <ol>
+                    <li>Navegar a la página de un producto.</li>
+                    <li>En la sección de comentarios introducir el payload: <code>&lt;script&gt;alert('XSS_Exitoso')&lt;/script&gt;</code></li>
+                    <li>Rellenar los campos de nombre y email, luego enviar el comentario.</li>
+                    <li>Al recargar o volver a la página, el script se ejecutará.</li>
+                </ol>
+
+                <p><strong>Explicación detallada:</strong> Imagina un buzón donde cualquiera puede dejar una nota. Si esas notas se pegan directamente en el escaparate sin revisarlas, un atacante podría pegar una nota con un “mini script” escondido. Cuando alguien mire el escaparate, el script se activa.</p>
+
+<pre><code>// script.js - fragmento vulnerable
+function renderComments(id) {
+    const container = document.getElementById('comments-container');
+    container.innerHTML = '';
+    const comments = JSON.parse(localStorage.getItem(`comments_${id}`)) || [];
+    comments.forEach(c => {
+        const div = document.createElement('div');
+        // ⚠️ VULNERABILIDAD: se inserta la entrada del usuario como HTML
+        div.innerHTML = `<p><strong>${c.name}</strong>: ${c.text}</p>`; // <--- VULNERABLE
+        container.appendChild(div);
+    });
+}
+</code></pre>
+
+                <p>En un backend con Flask, sería similar si insertáramos el texto sin escaparlo:</p>
+<pre><code class="language-python">
+# app.py - pseudo ejemplo vulnerable
+@app.route('/comentar', methods=['POST'])
+def comentar():
+    comentario = request.form['comment_text']
+    # Se almacena e imprime sin sanitizar
+    return f"&lt;p&gt;{comentario}&lt;/p&gt;"  # <--- VULNERABLE
+</code></pre>
+
+                <p><strong>Explicación de cómo arreglar la vulnerabilidad:</strong></p>
+<pre><code>// script.js - forma segura en el front
+div.textContent = `${c.name}: ${c.text}`; // Usa textContent para evitar HTML
+</code></pre>
+<pre><code class="language-python">
+# app.py - forma segura con Flask
+from markupsafe import escape
+
+@app.route('/comentar', methods=['POST'])
+def comentar():
+    comentario = escape(request.form['comment_text'])
+    return f"&lt;p&gt;{comentario}&lt;/p&gt;"
+</code></pre>
+                <p>La idea es validar y escapar siempre la entrada del usuario antes de mostrarla.</p>
+            </div>
+        </details>
+    </section>
+
+    <!-- ========================= GRID DE PRODUCTOS ========================= -->
+    <main>
+        <section class="product-grid">
+            <div class="product-card" data-id="1">
+                <img src="https://yavuzceliker.github.io/sample-images/image-11.jpg" alt="Producto 1">
+                <h3>Producto 1</h3>
+                <p class="price">$10.00</p>
+                <button class="details-btn">Ver detalles</button>
+            </div>
+            <div class="product-card" data-id="2">
+                <img src="https://yavuzceliker.github.io/sample-images/image-12.jpg" alt="Producto 2">
+                <h3>Producto 2</h3>
+                <p class="price">$12.00</p>
+                <button class="details-btn">Ver detalles</button>
+            </div>
+            <div class="product-card" data-id="3">
+                <img src="https://yavuzceliker.github.io/sample-images/image-13.jpg" alt="Producto 3">
+                <h3>Producto 3</h3>
+                <p class="price">$15.00</p>
+                <button class="details-btn">Ver detalles</button>
+            </div>
+            <div class="product-card" data-id="4">
+                <img src="https://yavuzceliker.github.io/sample-images/image-14.jpg" alt="Producto 4">
+                <h3>Producto 4</h3>
+                <p class="price">$18.00</p>
+                <button class="details-btn">Ver detalles</button>
+            </div>
+            <div class="product-card" data-id="5">
+                <img src="https://yavuzceliker.github.io/sample-images/image-15.jpg" alt="Producto 5">
+                <h3>Producto 5</h3>
+                <p class="price">$20.00</p>
+                <button class="details-btn">Ver detalles</button>
+            </div>
+            <div class="product-card" data-id="6">
+                <img src="https://yavuzceliker.github.io/sample-images/image-16.jpg" alt="Producto 6">
+                <h3>Producto 6</h3>
+                <p class="price">$25.00</p>
+                <button class="details-btn">Ver detalles</button>
+            </div>
+            <div class="product-card" data-id="7">
+                <img src="https://yavuzceliker.github.io/sample-images/image-17.jpg" alt="Producto 7">
+                <h3>Producto 7</h3>
+                <p class="price">$30.00</p>
+                <button class="details-btn">Ver detalles</button>
+            </div>
+            <div class="product-card" data-id="8">
+                <img src="https://yavuzceliker.github.io/sample-images/image-18.jpg" alt="Producto 8">
+                <h3>Producto 8</h3>
+                <p class="price">$35.00</p>
+                <button class="details-btn">Ver detalles</button>
+            </div>
+        </section>
+
+        <!-- ========== DETALLE DE PRODUCTO + COMENTARIOS (VULNERABLE) ========== -->
+        <section id="product-detail" class="hidden">
+            <div class="detail-content">
+                <img id="detail-image" src="" alt="">
+                <h2 id="detail-title"></h2>
+                <p id="detail-price"></p>
+                <p id="detail-description">Descripción del producto...</p>
+
+                <h3>Comentarios</h3>
+                <div id="comments-container"></div>
+
+                <!-- Formulario vulnerable -->
+                <form id="comment-form">
+                    <input type="text" id="user_name" placeholder="Nombre" required>
+                    <input type="email" id="user_email" placeholder="Email" required>
+                    <input type="text" id="user_site" placeholder="Sitio web (opcional)">
+                    <textarea id="comment_text" placeholder="Escribe tu comentario" required></textarea>
+                    <button type="submit">Publicar comentario</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- ========================= FOOTER ========================= -->
+    <footer>
+        <a href="#">Sobre nosotros</a>
+        <a href="#">Contacto</a>
+        <p>© 2024 P4IM0N Hacking ACADEMY - Todos los derechos reservados</p>
+    </footer>
+
+    <!-- ========== BANNER DE FELICITACIONES (APARECE AL LOGRAR EL EXPLOIT) ========== -->
+    <div id="congrats-banner" class="hidden">
+        <div class="banner-content">
+            <span class="close-banner">&times;</span>
+            <h2>🏆🎉🚀 ¡Felicidades, Hacker!</h2>
+            <p>Has completado exitosamente el laboratorio de XSS Almacenado.</p>
+            <div class="share-links">
+                <a id="share-linkedin" target="_blank">LinkedIn</a>
+                <a id="share-facebook" target="_blank">Facebook</a>
+                <a id="share-reddit" target="_blank">Reddit</a>
+                <button id="copy-text">Copiar texto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

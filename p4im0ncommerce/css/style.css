@@ -1,0 +1,208 @@
+/* Estilos generales */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #333;
+}
+
+/* Modo oscuro */
+body.dark {
+    background: #121212;
+    color: #e0e0e0;
+}
+
+/* Navbar inspirada en Mercado Libre */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #ffe600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+.navbar .logo {
+    font-weight: bold;
+    margin-right: 20px;
+}
+.navbar .search-bar {
+    flex: 1;
+    padding: 5px;
+}
+.navbar .nav-links a,
+.navbar .nav-links button {
+    margin-left: 15px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+body.dark .navbar {
+    background: #333;
+    color: #ffe600;
+}
+body.dark .navbar .nav-links a,
+body.dark .navbar .nav-links button {
+    color: #ffe600;
+}
+
+/* Sección de instrucciones */
+.lab-info {
+    margin-top: 70px; /* compensar navbar fija */
+    padding: 20px;
+}
+.lab-info details {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 15px;
+}
+body.dark .lab-info details {
+    background: #1e1e1e;
+    border-color: #555;
+}
+
+/* Grid de productos */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+.product-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+.product-card img {
+    max-width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+.product-card button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #ffe600;
+    border: none;
+    cursor: pointer;
+}
+body.dark .product-card {
+    background: #1e1e1e;
+    border-color: #555;
+}
+body.dark .product-card button {
+    background: #333;
+    color: #ffe600;
+}
+
+/* Detalle de producto */
+#product-detail {
+    padding: 20px;
+    background: #fff;
+    border-top: 2px solid #ffe600;
+}
+#product-detail.hidden {
+    display: none;
+}
+body.dark #product-detail {
+    background: #1e1e1e;
+    border-color: #333;
+}
+#comments-container div {
+    border-bottom: 1px solid #ccc;
+    padding: 5px 0;
+}
+body.dark #comments-container div {
+    border-color: #555;
+}
+#comment-form input,
+#comment-form textarea,
+#comment-form button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+}
+#comment-form button {
+    background: #ffe600;
+    border: none;
+    cursor: pointer;
+}
+body.dark #comment-form button {
+    background: #333;
+    color: #ffe600;
+}
+
+/* Footer */
+footer {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+footer a {
+    color: #ffe600;
+    margin: 0 10px;
+    text-decoration: none;
+}
+body.dark footer {
+    background: #000;
+    color: #ffe600;
+}
+body.dark footer a {
+    color: #fff;
+}
+
+/* Banner de felicitaciones */
+#congrats-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#congrats-banner.hidden {
+    display: none;
+}
+.banner-content {
+    background: #fff;
+    padding: 20px;
+    text-align: center;
+    max-width: 500px;
+    position: relative;
+}
+.banner-content .close-banner {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+body.dark .banner-content {
+    background: #1e1e1e;
+    color: #ffe600;
+}
+
+/* Links de compartir */
+.share-links a,
+.share-links button {
+    margin: 5px;
+    padding: 8px 12px;
+    background: #ffe600;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+}
+body.dark .share-links a,
+body.dark .share-links button {
+    background: #333;
+    color: #ffe600;
+}
